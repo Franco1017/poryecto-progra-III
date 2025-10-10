@@ -42,11 +42,15 @@ public class GrafoIntegrationTest {
         servicio.crearCiudad("J");
         servicio.crearCiudad("B");
         servicio.crearCiudad("C");
+        servicio.crearCiudad("D");
+        servicio.crearCiudad("E");
 
         // Verificar que repositorio contiene las ciudades
         assertTrue(ciudadRepositorio.findByNombre("J").isPresent(), "Ciudad J no persistida");
         assertTrue(ciudadRepositorio.findByNombre("B").isPresent(), "Ciudad B no persistida");
         assertTrue(ciudadRepositorio.findByNombre("C").isPresent(), "Ciudad C no persistida");
+        assertTrue(ciudadRepositorio.findByNombre("D").isPresent(), "Ciudad D no persistida");
+        assertTrue(ciudadRepositorio.findByNombre("E").isPresent(), "Ciudad E no persistida");
        
     }
 }
