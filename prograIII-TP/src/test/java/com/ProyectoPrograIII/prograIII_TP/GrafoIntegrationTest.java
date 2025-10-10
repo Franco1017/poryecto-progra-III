@@ -39,13 +39,14 @@ public class GrafoIntegrationTest {
     @Test
     void testInsertPersistenceOnly() {
         // Crear un pequeño grafo en la BD y verificar que las ciudades se persisten
-        servicio.crearCiudad("A");
+        servicio.crearCiudad("J");
         servicio.crearCiudad("B");
         servicio.crearCiudad("C");
 
         // Verificar que repositorio contiene las ciudades
-        assertTrue(ciudadRepositorio.findByNombre("A").isPresent(), "Ciudad A no persistida");
+        assertTrue(ciudadRepositorio.findByNombre("J").isPresent(), "Ciudad J no persistida");
         assertTrue(ciudadRepositorio.findByNombre("B").isPresent(), "Ciudad B no persistida");
         assertTrue(ciudadRepositorio.findByNombre("C").isPresent(), "Ciudad C no persistida");
+       
     }
 }
