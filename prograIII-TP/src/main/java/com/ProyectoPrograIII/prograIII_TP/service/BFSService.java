@@ -4,8 +4,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/**
+ * Implementación del recorrido en anchura (BFS) sobre un grafo dirigido con pesos.
+ * Ignora los pesos para el recorrido; retorna el orden de visita.
+ */
 @Component
 public class BFSService {
+  /**
+   * Ejecuta BFS desde 'inicio' y devuelve el orden de visita.
+   */
   public List<String> bfs(Map<String, List<Map.Entry<String, Double>>> g, String inicio) {
     var visitado = new HashSet<String>();
     var cola = new ArrayDeque<String>();

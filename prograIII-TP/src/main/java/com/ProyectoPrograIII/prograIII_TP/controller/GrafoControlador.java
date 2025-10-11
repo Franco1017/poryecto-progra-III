@@ -15,8 +15,9 @@ import com.ProyectoPrograIII.prograIII_TP.model.Ciudad;
 import com.ProyectoPrograIII.prograIII_TP.service.GrafoServicio;
 
 /**
- * Controlador REST que expone los endpoints para interactuar con el grafo
- * (crear ciudades, conectar caminos y ejecutar algoritmos)
+ * Controlador REST que expone endpoints para gestionar el grafo de ciudades:
+ * - Crear ciudades y conectar caminos con peso.
+ * - Ejecutar algoritmos de recorridos (BFS/DFS) y caminos mínimos (Dijkstra) y MST (Prim).
  */
 @RestController
 @RequestMapping("/grafo")
@@ -33,19 +34,19 @@ public class GrafoControlador {
     //   SECCIÓN CRUD BÁSICO
     // ----------------------------
 
-    /** Crea una nueva ciudad en la base de datos Neo4j */
+    /** Crea una nueva ciudad en la base de datos Neo4j. */
     @PostMapping("/ciudad/{nombre}")
     public Ciudad crearCiudad(@PathVariable String nombre) {
         return servicio.crearCiudad(nombre);
     }
 
-    /** Crea un camino (una relación dirigida) entre dos ciudades */
+    /** Crea un camino dirigido con peso entre dos ciudades (origen -> destino). */
     @PostMapping("/camino")
     public void conectar(@RequestBody CaminoReq req) {
         servicio.conectar(req.origen, req.destino, req.peso);
     }
 
-    /** Lista todas las ciudades con sus caminos */
+    /** Lista todas las ciudades con sus caminos salientes. */
     @GetMapping("/ciudades")
     public Iterable<Ciudad> ciudades() {
         return servicio.todas();
@@ -55,25 +56,25 @@ public class GrafoControlador {
     //   SECCIÓN ALGORITMOS
     // ----------------------------
 
-    /** Recorrido en anchura (BFS) */
+    /** Recorrido en anchura (BFS) desde la ciudad 'inicio'. */
     @GetMapping("/bfs")
     public List<String> bfs(@RequestParam String inicio) {
         return servicio.bfs(inicio);
     }
 
-    /** Recorrido en profundidad (DFS) */
+    /** Recorrido en profundidad (DFS) desde la ciudad 'inicio'. */
     @GetMapping("/dfs")
     public List<String> dfs(@RequestParam String inicio) {
         return servicio.dfs(inicio);
     }
 
-    /** Camino más corto entre dos ciudades (Dijkstra) */
+    /** Camino más corto entre dos ciudades (Dijkstra). */
     @GetMapping("/dijkstra")
     public Map<String, Object> dijkstra(@RequestParam String origen, @RequestParam String destino) {
         return servicio.dijkstra(origen, destino);
     }
 
-    /** Árbol de expansión mínima (Prim) */
+    /** Árbol de expansión mínima (Prim) sobre el grafo no dirigido equivalente. */
     @GetMapping("/prim")
     public Map<String, Object> prim() {
         return servicio.prim();

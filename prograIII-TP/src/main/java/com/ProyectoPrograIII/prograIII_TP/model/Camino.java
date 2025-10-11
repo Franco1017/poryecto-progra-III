@@ -1,8 +1,16 @@
 package com.ProyectoPrograIII.prograIII_TP.model;
 
-import org.springframework.data.neo4j.core.schema.*;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.RelationshipProperties;
+import org.springframework.data.neo4j.core.schema.TargetNode;
 
-/** Relación CAMINO con peso (distancia/tiempo/costo) */
+/**
+ * Relación CAMINO con peso (distancia/tiempo/costo) entre dos ciudades.
+ * - destino: nodo ciudad al que apunta la relación.
+ * - peso: costo asociado a transitar este camino.
+ */
 @RelationshipProperties
 public class Camino {
   @Id @GeneratedValue

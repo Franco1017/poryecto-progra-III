@@ -4,8 +4,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/**
+ * Implementación del algoritmo de Prim para árbol de expansión mínima (MST).
+ * Trabaja sobre el grafo no dirigido equivalente al dirigido almacenado.
+ */
 @Component
 public class PrimService {
+  /**
+   * Calcula el MST y retorna costo total y lista de aristas seleccionadas.
+   */
   public Map<String,Object> prim(Map<String, List<Map.Entry<String, Double>>> dirigido) {
     var g = new HashMap<String, List<Map.Entry<String, Double>>>();
     dirigido.forEach((u, lst) -> {

@@ -4,8 +4,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/**
+ * Implementación del algoritmo de Dijkstra para caminos mínimos.
+ * Devuelve un Map con 'distancia' y 'camino' (lista de nodos).
+ */
 @Component
 public class DijkstraService {
+  /**
+   * Calcula el camino mínimo entre 'origen' y 'destino'.
+   */
   public Map<String,Object> dijkstra(Map<String, List<Map.Entry<String, Double>>> g, String origen, String destino) {
     var dist = new HashMap<String, Double>();
     var previo = new HashMap<String, String>();

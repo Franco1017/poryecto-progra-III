@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<testcontainers.version>1.19.1</testcontainers.version>
 	</properties>
 	<dependencies>
 		<!-- Spring Boot Web starter (controllers, REST) -->
@@ -47,6 +48,23 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Testcontainers for Neo4j integration tests (use managed version) -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>neo4j</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -59,6 +77,25 @@
 					<release>17</release>
 				</configuration>
 			</plugin>
+
+			<!-- Configure Surefire to exclude tests tagged 'integration' by default.
+				 To run integration tests explicitly use: mvn -Pintegration test
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M9</version>
+				<configuration>
+					<properties>
+						<!-- Exclude tests annotated with @Tag("integration") by default -->
+						<property>
+							<name>junit.jupiter.tags.exclude</name>
+							<value>integration</value>
+						</property>
+					</properties>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

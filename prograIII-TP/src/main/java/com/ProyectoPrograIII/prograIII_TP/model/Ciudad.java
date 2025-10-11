@@ -8,7 +8,11 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-/** Nodo Ciudad en Neo4j */
+/**
+ * Nodo Ciudad en Neo4j.
+ * - nombre: etiqueta de la ciudad.
+ * - caminos: relaciones salientes CAMINO hacia otras ciudades con un peso asociado.
+ */
 @Node("Ciudad")
 public class Ciudad {
   @Id @GeneratedValue
