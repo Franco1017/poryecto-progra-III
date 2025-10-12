@@ -81,6 +81,7 @@ public class GrafoIntegrationTest {
         servicio.crearCiudad("F");
         servicio.crearCiudad("G");
         servicio.crearCiudad("H");
+        servicio.crearCiudad("I");  
 
         servicio.conectar("J", "B", 1.0);
         servicio.conectar("J", "C", 2.0);
@@ -99,6 +100,9 @@ public class GrafoIntegrationTest {
         servicio.conectar("G", "H", 2.0);
         servicio.conectar("A", "G", 1.0);
         servicio.conectar("F", "A", 7.0);
+        servicio.conectar("I", "H", 1.0);
+        servicio.conectar("I", "E", 2.0);
+        servicio.conectar("I", "F", 3.0);
 
         // Verificar que repositorio contiene las ciudades
         assertTrue(ciudadRepositorio.findByNombre("J").isPresent(), "Ciudad J no persistida");
@@ -110,5 +114,6 @@ public class GrafoIntegrationTest {
         assertTrue(ciudadRepositorio.findByNombre("G").isPresent(), "Ciudad G no persistida");
         assertTrue(ciudadRepositorio.findByNombre("H").isPresent(), "Ciudad H no persistida");
         assertTrue(ciudadRepositorio.findByNombre("A").isPresent(), "Ciudad A no persistida");
+        assertTrue(ciudadRepositorio.findByNombre("I").isPresent(), "Ciudad I no persistida");
     }
 }
