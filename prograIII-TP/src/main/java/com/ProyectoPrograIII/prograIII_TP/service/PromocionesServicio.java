@@ -2,11 +2,12 @@ package com.ProyectoPrograIII.prograIII_TP.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Service;
 
 import com.ProyectoPrograIII.prograIII_TP.model.Producto;
-import com.ProyectoPrograIII.prograIII_TP.repository.ProductoRepositorio;
 
 /**
  * Servicio que implementa búsqueda por backtracking (retroceso) para generar promociones
@@ -18,11 +19,11 @@ import com.ProyectoPrograIII.prograIII_TP.repository.ProductoRepositorio;
  * {@code maxItems}.
  */
 @Service
-public class PromotionService {
-  private final ProductoRepositorio productoRepo;
+public class PromocionesServicio {
+  private final Neo4jClient neo4j;
 
-  public PromotionService(ProductoRepositorio productoRepo) {
-    this.productoRepo = productoRepo;
+  public PromocionesServicio(Neo4jClient neo4j) {
+    this.neo4j = neo4j;
   }
 
   /**
@@ -39,7 +40,7 @@ public class PromotionService {
     // Cargar productos y precios en el mismo orden
     List<Producto> products = new ArrayList<>();
     for (String s : skus) {
-      Producto p = productoRepo.findBySku(s).orElseThrow(() -> new RuntimeException("SKU not found: " + s));
+      Producto p = findBySkuOrThrow(s);
       products.add(p);
     }
 
@@ -48,6 +49,23 @@ public class PromotionService {
 
     backtrack(products, 0, 0.0, minTotal, maxTotal, maxItems, current, results);
     return results;
+  }
+
+  // Helper: query Neo4j directly for a product by sku and construct a Producto POJO.
+  private Producto findBySkuOrThrow(String sku) {
+    var rows = neo4j.query("""
+      MATCH (p:Producto {sku:$sku})
+      RETURN p.sku AS sku, p.precio AS precio
+    """).bindAll(Map.of("sku", sku)).fetch().all();
+
+  if (rows.isEmpty()) throw new RuntimeException("SKU not found: " + sku);
+  @SuppressWarnings("unchecked")
+  Map<String,Object> row = (Map<String,Object>)rows.iterator().next();
+  Producto p = new Producto();
+  p.setSku((String)row.get("sku"));
+  Object precio = row.get("precio");
+    if (precio instanceof Number) p.setPrecio(((Number)precio).doubleValue());
+    return p;
   }
 
   // Recorrido recursivo: intentar incluir o excluir el producto i

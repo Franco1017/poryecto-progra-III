@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Service;
 
 import com.ProyectoPrograIII.prograIII_TP.model.Producto;
-import com.ProyectoPrograIII.prograIII_TP.repository.ProductoRepositorio;
 
 /**
  * Servicio que implementa una variante de Knapsack por programación dinámica.
@@ -22,11 +22,11 @@ import com.ProyectoPrograIII.prograIII_TP.repository.ProductoRepositorio;
  *   ser costoso en memoria/tiempo. Para esos casos conviene usar heurísticos.
  */
 @Service
-public class KnapsackService {
-  private final ProductoRepositorio productoRepo;
+public class MochilaServicio {
+  private final Neo4jClient neo4j;
 
-  public KnapsackService(ProductoRepositorio productoRepo) {
-    this.productoRepo = productoRepo;
+  public MochilaServicio(Neo4jClient neo4j) {
+    this.neo4j = neo4j;
   }
 
   /**
@@ -47,7 +47,7 @@ public class KnapsackService {
     List<Producto> products = new ArrayList<>();
     for (int i = 0; i < n; ++i) {
       String sku = skus.get(i);
-      Producto p = productoRepo.findBySku(sku).orElseThrow(() -> new RuntimeException("SKU not found: " + sku));
+  Producto p = findBySkuOrThrow(sku);
       products.add(p);
       int cents = (int)Math.round(p.getPrecio() * 100);
       wt[i] = cents;
@@ -91,5 +91,20 @@ public class KnapsackService {
     for (int i = chosen.size()-1; i >= 0; --i) ordered.add(chosen.get(i));
 
     return Map.of("total", total, "items", ordered);
+  }
+
+  // Helper: linear search over repository (avoids reliance on optional finder method)
+  private Producto findBySkuOrThrow(String sku) {
+    var rows = neo4j.query("""
+      MATCH (p:Producto {sku:$sku})
+      RETURN p.sku AS sku, p.precio AS precio
+    """).bindAll(Map.of("sku", sku)).fetch().all();
+    if (rows.isEmpty()) throw new RuntimeException("SKU not found: " + sku);
+    Map<String, Object> row = rows.iterator().next();
+    Producto p = new Producto();
+    p.setSku((String)row.get("sku"));
+    Object precio = row.get("precio");
+    if (precio instanceof Number) p.setPrecio(((Number)precio).doubleValue());
+    return p;
   }
 }
