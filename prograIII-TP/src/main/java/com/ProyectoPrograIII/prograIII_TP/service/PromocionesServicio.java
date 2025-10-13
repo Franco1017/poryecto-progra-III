@@ -1,7 +1,6 @@
 package com.ProyectoPrograIII.prograIII_TP.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -13,31 +12,7 @@ import com.ProyectoPrograIII.prograIII_TP.model.Cupon;
 @Service
 public class PromocionesServicio {
 
-  // ---------- DP: Bundle óptimo (Knapsack 0/1) ----------
-  public Map<String,Object> bundleOptimo(List<Item> items, int presupuesto) {
-    int n = items.size();
-    int[][] dp = new int[n+1][presupuesto+1];
-
-    for(int i=1;i<=n;i++){
-      int w = (int) items.get(i-1).precio; // precio como “peso”
-      int v = items.get(i-1).valor;
-      for(int cap=0; cap<=presupuesto; cap++){
-        dp[i][cap] = dp[i-1][cap];
-        if (w<=cap) dp[i][cap] = Math.max(dp[i][cap], dp[i-1][cap-w]+v);
-      }
-    }
-    // reconstrucción
-    int cap=presupuesto; List<String> seleccion=new ArrayList<>();
-    for(int i=n;i>=1;i--){
-      if (dp[i][cap]!=dp[i-1][cap]){
-        seleccion.add(items.get(i-1).sku);
-        cap -= (int)items.get(i-1).precio;
-      }
-    }
-    Collections.reverse(seleccion);
-    int total = seleccion.stream().mapToInt(sku -> (int)items.stream().filter(i -> i.sku.equals(sku)).findFirst().get().precio).sum();
-    return Map.of("valorMaximo", dp[n][presupuesto], "total", total, "seleccion", seleccion);
-  }
+  // Knapsack (bundle optimization) moved to MochilaServicio to keep promotions focused.
 
   // ---------- Backtracking: cupones/no compatibles ----------
   public Map<String,Object> aplicarCupones(List<Cupon> cupones, double totalCarrito) {
@@ -108,6 +83,5 @@ public class PromocionesServicio {
   }
 
   // ----- DTOs internos -----
-  public record Item(String sku, double precio, int valor){}
   public record Candidato(String sku, double score){}
 }

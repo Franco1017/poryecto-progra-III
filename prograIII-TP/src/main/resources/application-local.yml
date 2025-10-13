@@ -1,0 +1,10 @@
+spring:
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      # usa una env var si podés; a la derecha va el valor por defecto
+      password: ${NEO4J_LOCAL_PASSWORD:valentinayfranco}
+  data:
+    neo4j:
+      database: ${NEO4J_LOCAL_DATABASE:neo4j}

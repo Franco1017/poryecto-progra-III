@@ -1,0 +1,10 @@
+spring:
+  neo4j:
+    # en Aura SIEMPRE neo4j+s (TLS)
+    uri: neo4j+s://1e5db8a5.databases.neo4j.io 
+    authentication:
+      username: neo4j
+      password: ${NEO4J_PASSWORD:ZiWEejgcjji90145Qt-SPyphij4ah4k60SC83ivHgU4}
+  data:
+    neo4j:
+      database: ${NEO4J_DATABASE:neo4j}
