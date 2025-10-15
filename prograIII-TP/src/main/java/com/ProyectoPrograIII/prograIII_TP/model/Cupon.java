@@ -3,12 +3,18 @@ package com.ProyectoPrograIII.prograIII_TP.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+
 /**
  * Representa un cupón/promoción aplicable sobre un carrito.
- * Clase de dominio simple (POJO). Si en el futuro se desea persistir, se puede
- * anotar con @Node("Cupon") y crear un repositorio.
+ * Clase de dominio simple (POJO). Está anotada con @Node para poder persistirla
+ * en Neo4j si se desea.
  */
+@Node("Cupon")
 public class Cupon {
+  @Id @GeneratedValue
   private Long id;
   private String codigo;
   private double porcentaje; // entre 0..1

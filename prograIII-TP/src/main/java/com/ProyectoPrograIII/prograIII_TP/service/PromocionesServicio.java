@@ -8,9 +8,28 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.ProyectoPrograIII.prograIII_TP.model.Cupon;
+import com.ProyectoPrograIII.prograIII_TP.repository.CuponRepositorio;
 
 @Service
 public class PromocionesServicio {
+
+  private final CuponRepositorio cuponRepo;
+
+  public PromocionesServicio(CuponRepositorio cuponRepo) {
+    this.cuponRepo = cuponRepo;
+  }
+
+  /**
+   * Carga cupones desde la BD por su código. Si un código no existe, lo ignora.
+   */
+  public List<Cupon> cargarCuponesPorCodigo(List<String> codigos) {
+    List<Cupon> out = new ArrayList<>();
+    if (codigos == null || codigos.isEmpty()) return out;
+    for (String c : codigos) {
+      cuponRepo.findAll().forEach(p -> { if (p.getCodigo().equals(c)) out.add(p); });
+    }
+    return out;
+  }
 
   // Knapsack (bundle optimization) moved to MochilaServicio to keep promotions focused.
 
